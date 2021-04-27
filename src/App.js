@@ -2,11 +2,18 @@ import Planet from './components/Planet'
 import {useEffect, useState} from 'react'
 import Button from './components/Button'
 
+
+
 function App() {
   const [planet, setPlanet] = useState([])
-  const [next, setNext] = useState('')
-  console.log(next)
-  const [fetching, setNextFetching] = useState(false)
+  //const [next, setNext] = useState('')
+  const [page, setPage] = useState(1);
+
+  const fetching = () => {
+    setPage(page + 1);
+  };
+
+  /*
   useEffect(() => {
     fetch('https://swapi.dev/api/planets/')
     .then((response) => {
@@ -19,33 +26,29 @@ function App() {
         console.log(data.results)
         setPlanet(data.results)
         setNext(data.next)
-        console.log(next)
         })
       .catch((error) => {
         alert(error.message)
       })
-  }, [])
+  }, [])*/
 
   useEffect(() => {
-    fetch(next)
-    .then((response) => {
-        if (!response.ok) {
-          throw new Error("API REQUEST FAILED")
+    fetch(`https://swapi.dev/api/planets/?page=${page}`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
         }
-        return response.json()
+        throw new Error(
+          "Nous n'avons pas pu récupérer des informations requises."
+        );
       })
       .then((data) => {
-        console.log(data.results)
-        data.results.map(planets => {planet.push(planets)})
-        setNext(data.next)
-        console.log(next)
-        })
-      .catch((error) => {
-
+        console.log(data);
+        setPlanet(planet => [...planet, ...data.results]);
       })
-  }, [fetching])
+      .catch((error) => console.log(error.message));
+  }, [page]);
 
-  console.log(planet)
   return (
     <>
     <div className='container h-80vh'>
@@ -58,12 +61,11 @@ function App() {
           name={planet.name}
           population={planet.population}
           climate={planet.climate}
-          fetching={fetching}
-          setNextFetching={setNextFetching}
           />)
        })}
+
     </div>
-    <Button fetching={fetching} setNextFetching={setNextFetching}/>
+    <Button fetching={fetching}/>
     </div>
     
 
