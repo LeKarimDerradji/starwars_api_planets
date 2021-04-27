@@ -1,6 +1,6 @@
 
 const Planet = ( {key, name, population, climate} ) => {
-    let arid = 'https://cdna.artstation.com/p/assets/images/images/017/390/192/medium/brian-hagan-pla-ossus-final.jpg?1555781865'
+    
     return (
 
         <div key={key} className="card bg-dark text-white text-center" style={{width: '18rem'}}>
